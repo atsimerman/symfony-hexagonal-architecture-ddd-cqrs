@@ -1,0 +1,42 @@
+framework:
+    messenger:
+        default_bus: command.bus
+        
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_transaction
+            query.bus: ~
+            
+#        failure_transport: failed
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            async:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+            
+            command:
+                dsn: 'sync://'
+#            failed:
+#                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+#                options:
+#                    exchange:
+#                        name: failed
+#                    queues:
+#                        failed_messages: ~
+
+        routing:
+            # Route your messages to the transports
+            App\FrameworkInfrastructure\Domain\Message\AsyncMessageInterface: async
+            App\FrameworkInfrastructure\Domain\Command\CommandInterface: command
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async:
+                    dsn: 'sync://'
+                command:
+                    dsn: 'sync://'
+#                failed:
+#                    dsn: 'sync://'

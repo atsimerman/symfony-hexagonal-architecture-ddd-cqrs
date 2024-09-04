@@ -1,0 +1,7 @@
+POST https://localhost/api/login
+Content-Type: application/json
+
+{
+    "username": "admin@example.com",
+    "password": "B2IO+~8p`$M`_uA+"
+}

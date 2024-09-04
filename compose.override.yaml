@@ -1,0 +1,40 @@
+# Development environment override
+services:
+  php:
+    build:
+      context: .
+      target: frankenphp_dev
+      args:
+        USER_UID: ${USER_UID:-10001}
+        USER_GID: ${USER_GID:-10001}
+    volumes:
+      - .:/app
+      - ./frankenphp/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./frankenphp/conf.d/app.dev.ini:/usr/local/etc/php/conf.d/app.dev.ini:ro
+    environment:
+      MERCURE_EXTRA_DIRECTIVES: demo
+      # See https://xdebug.org/docs/all_settings#mode
+      XDEBUG_MODE: "${XDEBUG_MODE:-coverage}"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    tty: true
+
+  database:
+    ports:
+      - target: 5432
+        published: 5432
+        protocol: tcp
+
+  messenger:
+    ports:
+      - target: 5672
+        published: 5672
+        protocol: tcp
+      - target: 15672
+        published: 15672
+        protocol: tcp
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "${HOST_PORT_MAILHOG:-8025}:8025"

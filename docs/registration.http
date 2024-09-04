@@ -1,0 +1,8 @@
+POST https://localhost/api/registration
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "plainPassword": "B2IO+~8p`$M`_uA+",
+    "name": "User Example",
+}
